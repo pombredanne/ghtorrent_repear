@@ -1,0 +1,131 @@
+{
+  "attributes": [
+    {
+      "name": "architecture",
+      "initial": "a",
+      "weight": 20,
+      "enabled": true,
+      "requires_source": true,
+      "dependencies": [
+        "ack"
+      ],
+      "options": {
+        "timeout": "6H",
+        "threshold": 0.649123,
+        "minimumFiles": 2
+      }
+    },
+    {
+      "name": "community",
+      "initial": "c",
+      "weight": 20,
+      "enabled": true,
+      "requires_source": false,
+      "options": {
+        "threshold": 2,
+        "cutoff": 0.8
+      }
+    },
+    {
+      "name": "continuous_integration",
+      "initial": "i",
+      "weight": 5,
+      "enabled": true,
+      "requires_source": true,
+      "options": {
+      }
+    },
+    {
+      "name": "documentation",
+      "initial": "d",
+      "weight": 20,
+      "enabled": true,
+      "requires_source": true,
+      "options": {
+          "threshold": 0.001866 
+      }
+    },
+    {
+      "name": "history",
+      "initial": "h",
+      "weight": 20,
+      "enabled": true,
+      "requires_source": false,
+      "options": {
+        "threshold": 2.089552,
+        "minimumDurationInMonths": 1
+      }
+    },
+    {
+      "name": "license",
+      "initial": "l",
+      "weight": 0,
+      "enabled": true,
+      "requires_source": true,
+      "essential": true
+    },
+    {
+      "name": "management",
+      "initial": "m",
+      "weight": 5,
+      "enabled": true,
+      "requires_source": false,
+      "options": {
+          "threshold": 0.022989
+      }
+    },
+    {
+      "name": "project_size",
+      "initial": "p",
+      "weight": 0,
+      "enabled": true,
+      "requires_source": true,
+      "options": {
+        "threshold": 0
+      }
+    },
+    {
+      "name": "repository_size",
+      "initial": "r",
+      "weight": 0,
+      "enabled": true,
+      "requires_source": true,
+      "options": {
+        "threshold": 0
+      }
+    },
+    {
+      "name": "state",
+      "initial": "s",
+      "weight": 0,
+      "enabled": true,
+      "requires_source": false,
+      "options": {
+        "threshold": "6m"
+      }
+    },
+    {
+      "name": "stars",
+      "initial": "t",
+      "weight": 0,
+      "enabled": true,
+      "requires_source": false,
+      "options": {
+        "threshold": 0
+      }
+    },
+    {
+      "name": "unit_test",
+      "initial": "u",
+      "weight": 10,
+      "enabled": true,
+      "requires_source": true,
+      "dependencies": [
+        "cloc"
+      ],
+      "options": {
+        "threshold": 0.001016
+      }
+    }
+  ]
+}
