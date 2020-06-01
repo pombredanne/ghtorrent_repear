@@ -1,0 +1,18 @@
+{
+    "options": {
+      "threshold": 0,
+      "persistResult":"true",
+      "datasource": {
+        "database": "ghtorrent",
+        "user": "root",
+        "password": "",
+        "host": "localhost"
+      },
+      "today": "2020-02-02",
+      "timeout": "1H",
+      "github_tokens": [
+          "94f54d47604013ae801126b1dac439762e19bdf7"
+      ]
+    }
+  }
+  
