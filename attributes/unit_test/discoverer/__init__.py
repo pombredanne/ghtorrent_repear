@@ -76,7 +76,7 @@ def get_test_discoverer(language):
             _load_test_discoverer(module_, class_)
         return TEST_DISCOVERER_CACHE[class_]
     else:
-        raise Exception('Test discoverer for %s is not defined.' % language)
+        raise Exception('Test discoverer for {0} is not defined.'.format(language))
 
 
 class TestDiscoverer(object):
@@ -127,6 +127,7 @@ class TestDiscoverer(object):
                     files = utilities.get_files(_path, self.language)
                     if files:
                         # SLOC of test code
+                        print('path_init: ',path)
                         _slotc = utilities.get_loc(path, files=files)
                         slotc = 0
                         for language in self.languages:

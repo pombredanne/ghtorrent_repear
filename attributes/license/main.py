@@ -33,7 +33,7 @@ def run(project_id, repo_path, cursor, **options):
 
     record = cursor.fetchone()
 
-    full_url = utilities.TOKENIZER.tokenize(record[0].rstrip())
+    full_url = record[0]
     json_response = url_to_json(full_url, headers={
             'Accept': 'application/vnd.github.drax-preview+json'
         }

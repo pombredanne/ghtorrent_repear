@@ -25,7 +25,7 @@ def run(project_id, repo_path, cursor, **options):
     dom = bs.BeautifulSoup(page,'lxml')
     totalNoOfCommits  = int(dom.body.find_all('span',class_='text-emphasized')[0].text.replace("\n",""))
     aList = dom.body.find_all('a')
-    print(aList)
+    #print(aList)
     for shaKey in aList:
         if("master" not in shaKey.get('href') and repoName in shaKey.get('href')):
             print(shaKey.get('href'))

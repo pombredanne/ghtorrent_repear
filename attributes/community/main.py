@@ -11,7 +11,7 @@ QUERY = '''
 SELECT name FROM projects WHERE id={0}
 '''
 
-
+def removeNonAscii(s): return "".join(i for i in s if ord(i)<128)
 def run(project_id, repo_path, cursor, **options):
     num_core_contributors = 0
     num_commits = 0
@@ -19,14 +19,17 @@ def run(project_id, repo_path, cursor, **options):
     cursor.execute(QUERY.format(project_id))
     repoName = cursor.fetchone()[0]
     print(repoName)
-    os.chdir("../../path/")
+    print(os.getcwd())
+    os.chdir("path/"+str(project_id)+"/")
+    stri = os.getcwd() 
     print(os.getcwd())
     for repos in os.listdir():
         if(repos == repoName):
-            inner_os.chdir(repos)
-            stream = os.popen('git shortlog -s -n').read().split("\n")
+            os.chdir(repos)
+            stream = inner_os.popen('git shortlog -s -n').read().split("\n")
             totalNumberOfCommits = 0
             for commits in stream:
+                commits = removeNonAscii(commits)
                 commit = commits.replace(" ","")
                 if(len(commit) > 0):
                     commitList.append(int(commit.split("\t")[0]))

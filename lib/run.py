@@ -50,6 +50,9 @@ class Run(object):
             traceback.print_exception(extype, exvalue, extrace)
         finally:
             if rresults is not None:
+                print(type(table))
+                print(table)
+                print('rresults: ',rresults)
                 self._save(project_id, rresults, table)
 
         # HACK: Waiting for mysqld to reclaim its connection
@@ -140,7 +143,8 @@ class Run(object):
         cresult = '\033[92m✓\033[0m'
         if score < self.threshold:
             cresult = '\033[91m✘\033[0m'
-
+        print('project_id: ',project_id)
+        print('score: ',score)
         sys.stdout.write(
-            ' [{0:>10d}] {1} {2}\n'.format(project_id, score, cresult)
+            ' [{0:>10d}] {1}\n'.format(project_id, score)
         )

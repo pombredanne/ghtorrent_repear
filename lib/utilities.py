@@ -80,11 +80,18 @@ def get_loc(path, files=None):
             # Using temporary file to overcome the character limit in bash
             #   command line.
             tempfile = NamedTemporaryFile()
-            with open(tempfile.name, 'w') as _tempfile:
+            print('tempfile: ',tempfile)
+            print('HI')
+            tempfile_fi = tempfile.name
+            print(type(tempfile_fi))
+            tempfile_fi = tempfile_fi.replace('C:','E:')
+            print('HI')
+            print('tempfile.name: ',tempfile_fi)
+            with open(tempfile_fi, 'w') as _tempfile:
                 for _file in files:
                     _tempfile.write('{0}\n'.format(_file))
 
-            command += '--list-file={0}'.format(tempfile.name)
+            command += '--list-file={0}'.format(tempfile_fi)
         else:
             command += '.'
 

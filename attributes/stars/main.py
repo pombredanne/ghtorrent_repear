@@ -1,5 +1,5 @@
 import sys
-
+import requests
 from lib import utilities
 
 
@@ -8,14 +8,10 @@ def run(project_id, repo_path, cursor, **options):
 
     cursor.execute('SELECT url FROM projects WHERE id = {}'.format(project_id))
     record = cursor.fetchone()
-
-    full_url = utilities.TOKENIZER.tokenize(record[0].rstrip())
-    json_response = utilities.url_to_json(full_url)
-    rresult = (
-        json_response['stargazers_count']
-        if 'stargazers_count' in json_response
-        else None
-    )
+    full_url = record[0]
+    print(full_url)
+    page = requests.get(full_url).json()["stargazers_count"]
+    rresult = page
     bresult = True if rresult is not None and rresult >= threshold else False
 
     return bresult, rresult

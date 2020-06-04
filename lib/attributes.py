@@ -7,12 +7,28 @@ import sys
 import types
 import traceback
 from datetime import datetime
-
+import bs4 as bs
+import urllib.request
+from time import strptime
+from datetime import datetime
 import attributes
-
+import requests
 from lib import utilities
-
-
+import mysql.connector
+ghtorrentDb = mysql.connector.connect(
+  host="localhost",
+  user="root",
+  passwd="",
+  database="ghtorrent"
+)
+def getLastCommitDate(project_id):
+    cursor = ghtorrentDb.cursor()
+    cursor.execute("SELECT url FROM projects WHERE id={0}".format(project_id))
+    url = cursor.fetchone()[0] + "/commits"
+    uname = "Kowndinya2000"
+    token = "94f54d47604013ae801126b1dac439762e19bdf7"
+    page = requests.get(url).json()[0]["commit"]["committer"]["date"].split("T")[0]
+    return page
 class Attribute(object):
     def __init__(self, attribute, **goptions):
         self.name = attribute.get('name', '')
@@ -195,27 +211,32 @@ class Attributes(object):
                     repository_path = itempath
                     break
         else:
-            (repo_owner, repo_name) = self.database.get(
-                '''
-                    SELECT u.login, p.name
-                    FROM projects p
-                        JOIN users u ON u.id = p.owner_id
-                    WHERE p.id = {0}
-                '''.format(project_id)
-            )
+            cursor = ghtorrentDb.cursor()
+            cursor.execute("SELECT url FROM projects WHERE id={0}".format(project_id))
+            url = cursor.fetchone()[0].replace("https://api.github.com/repos/","").split("/")
+            (repo_owner, repo_name) = (url[0],url[1])
+            # self.database.get(
+            #     '''
+            #         SELECT u.login, p.name
+            #         FROM projects p
+            #             JOIN users u ON u.id = p.owner_id
+            #         WHERE p.id = {0}
+            #     '''.format(project_id)
+            # )
             if not (repo_owner or repo_name):
                 raise ValueError('Invalid project ID {0}.'.format(project_id))
-
-            last_commit_date = self.database.get(
-                '''
-                    SELECT DATE(c.created_at)
-                    FROM project_commits pc
-                        JOIN commits c ON c.id = pc.commit_id
-                    WHERE pc.project_id = {0}
-                    ORDER BY c.created_at DESC
-                    LIMIT 1
-                '''.format(project_id)
-            )
+            
+            last_commit_date = getLastCommitDate(project_id)
+            # last_commit_date = self.database.get(
+            #     '''
+            #         SELECT DATE(c.created_at)
+            #         FROM project_commits pc
+            #             JOIN commits c ON c.id = pc.commit_id
+            #         WHERE pc.project_id = {0}
+            #         ORDER BY c.created_at DESC
+            #         LIMIT 1
+            #     '''.format(project_id)
+            # )
 
             if last_commit_date is None:
                 last_commit_date = self.today

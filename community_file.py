@@ -8,20 +8,23 @@ ghtorrentDb = mysql.connector.connect(
   passwd="",
   database="ghtorrent"
 )
-project_id = 34674827
+def removeNonAscii(s): return "".join(i for i in s if ord(i)<128)
+project_id = 73853368
 cursor = ghtorrentDb.cursor()
 cursor.execute("SELECT name FROM projects WHERE id={0}".format(project_id))
 repoName = cursor.fetchone()[0]
 print(repoName)
-os.chdir("path/")
+os.chdir("path/"+str(project_id)+"/")
 print(os.getcwd())
 for repos in os.listdir():
     if(repos == repoName):
         inner_os.chdir(repos)
-        stream = os.popen('git shortlog -s -n').read().split("\n")
+        stream = removeNonAscii(os.popen('git shortlog -s -n').read()).split("\n")
         commitList = []
         totalNumberOfCommits = 0
         for commits in stream:
+            print(commits)
+            commits.encode('UTF-8')
             commit = commits.replace(" ","")
             if(len(commit) > 0):
                 commitList.append(int(commit.split("\t")[0]))
