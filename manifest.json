@@ -10,7 +10,7 @@
         "ack"
       ],
       "options": {
-        "timeout": "6H",
+        "timeout": "5M",
         "threshold": 0.649123,
         "minimumFiles": 2
       }
@@ -46,6 +46,16 @@
       }
     },
     {
+      "name": "pull_requests",
+      "initial": "e",
+      "weight": 20,
+      "enabled": true,
+      "requires_source": false,
+      "options": {
+        "threshold": 0
+      }
+    },
+    {
       "name": "history",
       "initial": "h",
       "weight": 20,
@@ -75,11 +85,41 @@
       }
     },
     {
+      "name": "dependency",
+      "initial": "o",
+      "weight": 20,
+      "enabled": true,
+      "requires_source": false,
+      "options": {
+        "threshold": 0
+      }
+    },
+    {
+      "name": "releases",
+      "initial": "o",
+      "weight": 20,
+      "enabled": true,
+      "requires_source": false,
+      "options": {
+        "threshold": 0
+      }
+    },
+    {
       "name": "project_size",
       "initial": "p",
       "weight": 0,
       "enabled": true,
       "requires_source": true,
+      "options": {
+        "threshold": 0
+      }
+    },
+    {
+      "name": "commit_quality",
+      "initial": "q",
+      "weight": 20,
+      "enabled": true,
+      "requires_source": false,
       "options": {
         "threshold": 0
       }
@@ -91,7 +131,8 @@
       "enabled": true,
       "requires_source": true,
       "options": {
-        "threshold": 0
+        "threshold": 0,
+        "timeout": "6M"
       }
     },
     {
@@ -101,7 +142,8 @@
       "enabled": true,
       "requires_source": false,
       "options": {
-        "threshold": "6m"
+        "threshold": "6m",
+        "timeout": "6M"
       }
     },
     {
@@ -111,7 +153,8 @@
       "enabled": true,
       "requires_source": false,
       "options": {
-        "threshold": 0
+        "threshold": 0,
+        "timeout": "6M"
       }
     },
     {
