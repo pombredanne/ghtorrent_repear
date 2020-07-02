@@ -47,7 +47,8 @@ def run(project_id, repo_path, cursor, **options):
             if utilities.search(pattern, repo_path, ignorecase=True):
                 result = True
                 break
-
+    print("----- METRIC: LICENSE -----")
+    print('result: ',result)
     return result, result
 
 if __name__ == '__main__':

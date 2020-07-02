@@ -3,7 +3,7 @@
     {
       "name": "architecture",
       "initial": "a",
-      "weight": 20,
+      "weight": 10,
       "enabled": true,
       "requires_source": true,
       "dependencies": [
@@ -16,9 +16,19 @@
       }
     },
     {
+      "name": "documentation_quality",
+      "initial": "b",
+      "weight": 5,
+      "enabled": true,
+      "requires_source": false,
+      "options": {
+        "threshold": 0
+      }
+    },
+    {
       "name": "community",
       "initial": "c",
-      "weight": 20,
+      "weight": 10,
       "enabled": true,
       "requires_source": false,
       "options": {
@@ -38,7 +48,7 @@
     {
       "name": "documentation",
       "initial": "d",
-      "weight": 20,
+      "weight": 5,
       "enabled": true,
       "requires_source": true,
       "options": {
@@ -48,7 +58,7 @@
     {
       "name": "pull_requests",
       "initial": "e",
-      "weight": 20,
+      "weight": 5,
       "enabled": true,
       "requires_source": false,
       "options": {
@@ -58,18 +68,18 @@
     {
       "name": "history",
       "initial": "h",
-      "weight": 20,
+      "weight": 5,
       "enabled": true,
       "requires_source": false,
       "options": {
-        "threshold": 2.089552,
+        "threshold": 1,
         "minimumDurationInMonths": 1
       }
     },
     {
       "name": "license",
       "initial": "l",
-      "weight": 0,
+      "weight": 5,
       "enabled": true,
       "requires_source": true,
       "essential": true
@@ -87,7 +97,7 @@
     {
       "name": "dependency",
       "initial": "o",
-      "weight": 20,
+      "weight": 5,
       "enabled": true,
       "requires_source": false,
       "options": {
@@ -97,7 +107,7 @@
     {
       "name": "releases",
       "initial": "o",
-      "weight": 20,
+      "weight": 5,
       "enabled": true,
       "requires_source": false,
       "options": {
@@ -107,7 +117,7 @@
     {
       "name": "project_size",
       "initial": "p",
-      "weight": 0,
+      "weight": 5,
       "enabled": true,
       "requires_source": true,
       "options": {
@@ -117,7 +127,7 @@
     {
       "name": "commit_quality",
       "initial": "q",
-      "weight": 20,
+      "weight": 5,
       "enabled": true,
       "requires_source": false,
       "options": {
@@ -127,7 +137,7 @@
     {
       "name": "repository_size",
       "initial": "r",
-      "weight": 0,
+      "weight": 5,
       "enabled": true,
       "requires_source": true,
       "options": {
@@ -138,7 +148,7 @@
     {
       "name": "state",
       "initial": "s",
-      "weight": 0,
+      "weight": 5,
       "enabled": true,
       "requires_source": false,
       "options": {
@@ -149,7 +159,7 @@
     {
       "name": "stars",
       "initial": "t",
-      "weight": 0,
+      "weight": 5,
       "enabled": true,
       "requires_source": false,
       "options": {

@@ -56,7 +56,7 @@ def init(cursor):
 
 def run(project_id, repo_path, cursor, **options):
     result = 0
-
+    print("----- METRIC: ARCHITECTURE -----")
     cursor.execute('''
         SELECT
             language
@@ -111,7 +111,6 @@ def build_graph(file_paths, graph, lexer):
         for each token in the resulting tokens
             check if the token is defining a symbol
             if true, add the symbol to the file node
-
     for each file in the set of files
         open the file
         read the contents into memory

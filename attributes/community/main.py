@@ -5,8 +5,6 @@ import os as inner_os
 from lib.core import Tokenizer
 from lib.utilities import url_to_json
 
-
-# Query counts the number of distinct authors contributing to a project.
 QUERY = '''
 SELECT name FROM projects WHERE id={0}
 '''
@@ -18,11 +16,8 @@ def run(project_id, repo_path, cursor, **options):
     commitList = []
     cursor.execute(QUERY.format(project_id))
     repoName = cursor.fetchone()[0]
-    print(repoName)
-    print(os.getcwd())
     os.chdir("path/"+str(project_id)+"/")
-    stri = os.getcwd() 
-    print(os.getcwd())
+    stri = os.getcwd()
     for repos in os.listdir():
         if(repos == repoName):
             os.chdir(repos)
@@ -44,18 +39,9 @@ def run(project_id, repo_path, cursor, **options):
                     break
                 count += commits
                 core_contributors += 1
+            print("----- METRIC: COMMUNITY -----")
             print('core contributors: ',core_contributors)
             break
-    
-    # rows = cursor.fetchall()
-    # if cursor.rowcount == 0:    # Non-existent history
-    #     return False, num_core_contributors
-
-    # commits = collections.OrderedDict()
-    # for row in rows:
-    #     commits[row[0]] = row[1]
-    # num_commits = sum(commits.values())
-
     cutoff = options.get('cutoff', 1.0)
     aggregate = 0
     for v in commitList:

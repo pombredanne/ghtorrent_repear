@@ -8,6 +8,8 @@ ci_discoverer = CiDiscoverer()
 
 def run(project_id, repo_path, cursor, **options):
     result = ci_discoverer.discover(repo_path)
+    print("----- METRIC: CONTINUOUS INTEGRATION -----")
+    print('CI: ',result)
     return (int(result), result)
 
 

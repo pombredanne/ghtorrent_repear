@@ -16,7 +16,6 @@ def run(project_id, repo_path, cursor, **options):
     pr_rate = 0
     cursor.execute(QUERY.format(project_id))
     url = cursor.fetchone()[0].replace("api.","").replace("/repos","")
-    print(url)
     urlList = ["/pulls","/pulls?q=is%3Apr+is%3Aclosed+","/pulls?q=is%3Apr+is%3Amerged+"]
     url_opr = url+urlList[0]
     url_cpr = url+urlList[1]
@@ -30,12 +29,13 @@ def run(project_id, repo_path, cursor, **options):
     page = urllib.request.urlopen(url_mpr).read()
     dom = bs.BeautifulSoup(page,'lxml')
     mpr  = int(dom.body.find_all('a',class_='btn-link selected')[0].text.replace("\n","").split("Total")[0])
-    print("opr: ",opr,",cpr: ",cpr,",mpr: ",mpr)
+    print("----- METRIC: PULL REQUESTS -----")
     pr = mpr+cpr+opr
     if(pr > 0):
         pr_rate = float(mpr+cpr)/float(pr*1.0)
     threshold = options['threshold']
     pr_rate >= threshold, pr_rate
+    print("PR rate: ",pr_rate)
     return (pr_rate >= threshold, pr_rate)
 
 

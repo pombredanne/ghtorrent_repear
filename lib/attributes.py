@@ -170,7 +170,9 @@ class Attributes(object):
                     bresult = (rresult >= attribute.options['threshold'])
                 else:
                     bresult = bool(rresult)
-
+            # print('attribute_name: ',attribute.name)
+            # print("rresult: ",rresult)
+            # print("bresult: ",bresult)
             # If an *essential* attribute is missing a ZERO score is assigned
             if attribute.essential and bresult is False:
                 score = 0

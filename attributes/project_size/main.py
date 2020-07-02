@@ -26,7 +26,8 @@ def run(project_id, repo_path, cursor, **options):
             rresult += sloc[language]['sloc']
 
     bresult = True if rresult >= threshold else False
-
+    print("----- METRIC: PROJECT_SIZE -----")
+    print('project_size: ',rresult,", ",bresult)
     return bresult, rresult
 
 if __name__ == '__main__':

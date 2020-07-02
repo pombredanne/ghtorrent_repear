@@ -5,23 +5,17 @@ import os as inner_os
 from lib.core import Tokenizer
 from lib.utilities import url_to_json
 from spellchecker import SpellChecker
-
-
-# Query counts the number of distinct authors contributing to a project.
+import re
 QUERY = '''
 SELECT name FROM projects WHERE id={0}
 '''
 def run(project_id, repo_path, cursor, **options):
-    num_core_commits = 0
-    num_commits = 0
-    commitList = []
+    num_core_commit_words = 0
+    totalNumberOfCommitWords = 0
     cursor.execute(QUERY.format(project_id))
     repoName = cursor.fetchone()[0]
-    #print(repoName)
-    #print(os.getcwd())
     os.chdir("path/"+str(project_id)+"/")
     stri = os.getcwd() 
-    #print(os.getcwd())
     for repos in os.listdir():
         if(repos == repoName):
             os.chdir(repos)
@@ -31,70 +25,40 @@ def run(project_id, repo_path, cursor, **options):
                 Dirs.append(dirs.lower())
                 Files.append(files.lower())
             stream = inner_os.popen('git log --pretty=format:"%s"').read().split("\n")
-            totalNumberOfCommits = len(stream)
-            keywords = ['access', 'add ', 'aggregate', 'aggregating', 'aggregation', 'alias', 'allocate', 'allocating', 'allocation', 'apache', 'api', 'append', 'args', 'argument', 'assert', 'attribute', 'audit ', 'authentic', 'automatic', 'boot', 'branch ', 'bug', 'build', 'bytes', 'cache', 'caching', 'call', 'callback', 'catch', 'change', 'changing', 'check', 'clean', 'code', 'coding', 'commit', 'config', 'construct', 'contribute', 'contributing', 'contribution', 'copyright', 'correct', 'database', 'debug', 'decode', 'decoding', 'depend', 'deploy', 'deprecate', 'deprecating', 'description', 'discover', 'document', 'driver', 'encode', 'encoding', 'error ', 'escape', 'escaping', 'exception', 'exit', 'export', 'feedback', 'file', 'filter ', 'fix', 'force ', 'forcing', 'fork', 'format', 'handle', 'handling', 'identification', 'identify', 'ignore', 'ignoring', 'implement', 'import ', 'initial', 'insert', 'install', 'integrate', 'integrating', 'interrupt', 'iterate', 'iterating', 'iteration', 'kernel', 'launch ', 'license', 'licensing', 'lock', 'logic', 'logs', 'loop', 'make', 'manifest', 'merge', 'merging', 'missed', 'missing', 'mode', 'module', 'move', 'namespace', 'new', 'null', 'optimise', 'optimising', 'optimize', 'optimizing', 'overload', 'override', 'overriding', 'param', 'plugin', 'privacy', 'props', 'publish', 'pull ', 'query', 'random', 'redundance', 'redundant', 'refactor', 'reference', 'referencing', 'release', 'releasing', 'remote', 'remove ', 'removing', 'replace', 'replacing', 'report', 'request', 'resolve', 'resolving', 'restore', 'restoring', 'revert', 'review', 'roll', 'scan', 'search', 'secure', 'security', 'serial', 'signature', 'stream', 'support', 'sync', 'test', 'test', 'thread', 'threshold', 'timeout', 'token', 'tool ', 'trace ', 'tracing', 'track', 'tranlating', 'translate', 'trigger', 'truncate', 'truncating', 'truncation', 'unit ', 'update', 'updating', 'upgrade', 'upgrading', 'url', 'utf', 'version','#1','#2','#3','#4','#5','#6','#7','#8','#9','#0']         
             for commits in stream:
                 commits = commits.lower()
-                flag = False
-                for ab in keywords:
+                for ab in Dirs:
                     if(ab in commits):
-                        num_core_commits += 1
-                        #print("core_commit: ",commits)
-                        flag = True
-                        break
-                if(flag):
-                    continue
-                else:
-                    flag2 = False
-                    for ab in Dirs:
-                        if(ab in commits):
-                            num_core_commits += 1
-                            #print("core_commit: ",commits)
-                            flag2 = True
-                            break
-                    if(flag2):
-                        continue
-                    else:
-                        for ab in Files:
-                            if(ab in commits):
-                                num_core_commits += 1
-                                #print("core_commit: ",commits)
-                                break
-                trim_commit = commits.replace("."," ")
-                trim_commit = commits.replace("?"," ")
-                trim_commit = commits.replace("/"," ")
-                trim_commit = commits.replace("'"," ")
-                trim_commit = commits.replace('"'," ")
-                trim_commit = commits.replace('@'," ")
-                trim_commit = commits.replace('$'," ")
-                trim_commit = commits.replace('%'," ")
-                trim_commit = commits.replace('^'," ")
-                trim_commit = commits.replace('&'," ")
-                trim_commit = commits.replace('('," ")
-                trim_commit = commits.replace(')'," ")
-                trim_commit = commits.replace('['," ")
-                trim_commit = commits.replace(']'," ")
-                trim_commit = commits.replace('{'," ")
-                trim_commit = commits.replace('}'," ")
-                trim_commit = commits.replace('_'," ")
-                trim_commit = commits.replace('-'," ")
-                trim_commit = commits.replace(","," ")
-                trim_commit = commits.replace(":","")
-                trim_commit = commits.replace("\""," ")
-                trim_commit = commits.replace("!"," ")
-                trim_commit = commits.replace("â€œ"," ")
-                trim_commit = commits.replace("â€˜"," ")
-                trim_commit = commits.replace("*"," ")
+                        commits.replace(ab,"")
+                        num_core_commit_words += 1
+                        totalNumberOfCommitWords += 1
+                for ab in Files:
+                    if(ab in commits):
+                        commits.replace(ab,"")
+                        num_core_commit_words += 1
+                        totalNumberOfCommitWords += 1
+                nr = re.sub("[^0123456789 ]","",commits)
+                nr = ' '.join(nr.split())
+                totalNumberOfCommitWords += len(nr.split())
+                trim_commit = re.sub("[^a-zA-Z ]+", "", commits)
+                trim_commit = ' '.join(trim_commit.split())
+                #trim_commit = re.sub(r"\b[0-9]\b", "", trim_commit)
+                # print('trim: ',len(trim_commit.split()))
+                totalNumberOfCommitWords += len(trim_commit.split())
                 spell = SpellChecker()
-                misspelled = spell.unknown(trim_commit)
-                if(len(list(misspelled)) == 0):
-                    print('trim_commit: ',trim_commit)
-                    num_core_commits += 1
-                #print('Non-Core_commit: ',commits)
-            print('core commits: ',num_core_commits)
+                trim_commit = re.sub(r"\b[a-zA-Z]\b", "", trim_commit)
+                trim_commit = re.sub(r"\b[a-zA-Z][a-zA-Z]\b", "", trim_commit)
+                trim_commit = trim_commit.split()
+                spelled = spell.known(trim_commit)
+                # print('spelled: ',spelled)
+                num_core_commit_words += len(spelled)
+            print("----- METRIC: COMMIT QUALITY -----")
             commits_ratio = 0
-            if(totalNumberOfCommits > 0):
-                commits_ratio = float(num_core_commits)/float(totalNumberOfCommits*1.0)
+            # print('total: ',totalNumberOfCommitWords)
+            # print('core: ',num_core_commit_words)
+            if(totalNumberOfCommitWords > 0):
+                commits_ratio = float(num_core_commit_words)/float(totalNumberOfCommitWords*1.0)
+                print('core commits ratio: ',commits_ratio)
             break
     threshold = options['threshold']
     return (commits_ratio >= threshold, commits_ratio)

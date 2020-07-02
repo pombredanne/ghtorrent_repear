@@ -8,29 +8,22 @@ import arrow
 from time import strptime
 from datetime import datetime
 
-# Query counts the number of distinct authors contributing to a project.
 QUERY = '''
 SELECT name FROM projects WHERE id={0}
 '''
 def run(project_id, repo_path, cursor, **options):
     num_core_commits = 0
     dependency_ratio_total = 0
-    num_files = 0
-    num_commits = 0
-    commitList = []
+    totalLines = 0
     cursor.execute(QUERY.format(project_id))
     repoName = cursor.fetchone()[0]
-    #print(repoName)
-    #print(os.getcwd())
     os.chdir("path/"+str(project_id)+"/")
     stri = os.getcwd() 
-    #print(os.getcwd())
     for repos in os.listdir():
         if(repos == repoName):
             os.chdir(repos)
             AbsFiles = []
             Files = []
-            print('dependency: ')
             for (root,dirs,files) in inner_os.walk(os.getcwd(),topdown=True):
                 for fi in files:
                     if fi.endswith(".yml"):
@@ -43,7 +36,6 @@ def run(project_id, repo_path, cursor, **options):
                         Files.append(files)
                         AbsFiles.append(os.path.join(root,fi))
             for filename in AbsFiles:
-                print('filename: ',filename)
                 stream = inner_os.popen('git log '+ filename +'').read().split("\n")
                 commit_id = []
                 year = []
@@ -63,14 +55,14 @@ def run(project_id, repo_path, cursor, **options):
                         day.append(int(date_id[5]))
                         year.append(int(date_id[7]))
                 numberOfMonths = []
-                end = datetime(year[length-1],month[length-1],day[length-1])
-                for a in range(length-1):
+                end = datetime(year[0],month[0],day[0])
+                for a in range(1,length-1):
                     n_months = 0
-                    start = datetime(year[a],month[a],day[a])
+                    start = datetime(year[length-1-a],month[length-1-a],day[length-1-a])
                     for d in arrow.Arrow.range('month',start,end):
                         n_months += 1
                     if(n_months <= 12):
-                        stream2 = inner_os.popen('git diff '+commit_id[a]+" " + commit_id[length-1] +" -- "+ filename +"").read().split("\n")
+                        stream2 = inner_os.popen('git diff '+commit_id[length-1-a]+" " + commit_id[0] +" -- "+ filename +"").read().split("\n")
                         if(len(stream2) > 0):
                             ind = 0
                             for z in stream2:
@@ -83,23 +75,22 @@ def run(project_id, repo_path, cursor, **options):
                                         if("0." in stream2[z] or "1." in stream2[z] or "2." in stream2[z] or "3." in stream2[z] or "4." in stream2[z] or "5." in stream2[z] or "6." in stream2[z] or "7." in stream2[z] or "8." in stream2[z] or "9." in stream2[z]):
                                             changes += 1
                         break
-                print(changes)
                 totalNumberOfDependencyLines = 0
                 fp = open(filename,'r')
                 for x in fp:
                     if("0." in x or "1." in x or "2." in x or "3." in x or "4." in x or "5." in x or "6." in x or "7." in x or "8." in x or "9." in x):
                         totalNumberOfDependencyLines += 1
-                print('totalNumberOfDependencyLines: ',totalNumberOfDependencyLines)
-                dependency_ratio = 0
-                if(totalNumberOfDependencyLines > 0):
-                    dependency_ratio = float(changes)/float(totalNumberOfDependencyLines*1.0)
-                print('dependency_ratio: ',dependency_ratio)    
-                dependency_ratio_total += dependency_ratio
-                num_files += 1 
+                # dependency_ratio = 0
+                # if(totalNumberOfDependencyLines > 0):
+                #     dependency_ratio = float(changes)/float(totalNumberOfDependencyLines*1.0)  
+                dependency_ratio_total += changes
+                totalLines += totalNumberOfDependencyLines 
             break
     threshold = options['threshold']
-    if(num_files > 1):
-        dependency_ratio_total = float(dependency_ratio_total)/(num_files*1.0)
+    if(totalLines > 1):
+        dependency_ratio_total = float(dependency_ratio_total)/(totalLines*1.0)
+    print("----- METRIC: DEPENDENCY -----")
+    print('dependency_ratio_total: ',dependency_ratio_total)  
     return (dependency_ratio_total >= threshold, dependency_ratio_total)
 if __name__ == '__main__':
     print('Attribute plugins are not meant to be executed directly.')
